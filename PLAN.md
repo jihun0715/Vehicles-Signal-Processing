@@ -34,13 +34,15 @@ Vehicles-Signal-Processing/
 `config.py`에서 아래 값으로 사용할 optical flow method를 선택할 수 있게 한다.
 
 ```python
-OPTICAL_FLOW_METHOD = "dis"
+OPTICAL_FLOW_METHOD = "dis_medium"
 ```
 
 지원할 method:
 
 ```text
-"dis"
+"dis_ultrafast"
+"dis_fast"
+"dis_medium"
 "farneback"
 "lucas_kanade"
 "tvl1"
@@ -49,7 +51,7 @@ OPTICAL_FLOW_METHOD = "dis"
 기본 추천값:
 
 ```python
-OPTICAL_FLOW_METHOD = "dis"
+OPTICAL_FLOW_METHOD = "dis_medium"
 ```
 
 ## config.py 계획
@@ -61,9 +63,7 @@ OPTICAL_FLOW_METHOD = "dis"
 ```python
 TEST_IMAGE_DIR = "test_images"
 
-OPTICAL_FLOW_METHOD = "dis"
-
-DIS_PRESET = "medium"
+OPTICAL_FLOW_METHOD = "dis_medium"
 
 RESIZE_WIDTH = None
 
@@ -75,7 +75,6 @@ FLOW_VIS_SCALE = 1.0
 
 - `TEST_IMAGE_DIR`: 테스트 이미지 시퀀스 폴더 경로
 - `OPTICAL_FLOW_METHOD`: 사용할 optical flow backend
-- `DIS_PRESET`: `"ultrafast"`, `"fast"`, `"medium"` 중 하나
 - `RESIZE_WIDTH`: 빠른 테스트를 위한 선택적 resize width
 - `SHOW_FLOW_STEP`: 각 이미지 쌍의 결과를 순서대로 보여줄지 여부
 - `FLOW_VIS_SCALE`: flow vector 시각화 배율
@@ -87,7 +86,7 @@ FLOW_VIS_SCALE = 1.0
 주요 함수:
 
 ```python
-compute_optical_flow(prev_img, curr_img, method="dis")
+compute_optical_flow(prev_img, curr_img, method="dis_medium")
 ```
 
 반환 형식:
@@ -149,10 +148,10 @@ CPU에서도 빠르고, 품질과 속도의 균형이 좋다.
 ### Pseudocode
 
 ```python
-def compute_dis(prev_gray, curr_gray, preset):
-    if preset == "ultrafast":
+def compute_dis(prev_gray, curr_gray, method):
+    if method == "dis_ultrafast":
         cv_preset = cv2.DISOPTICAL_FLOW_PRESET_ULTRAFAST
-    elif preset == "fast":
+    elif method == "dis_fast":
         cv_preset = cv2.DISOPTICAL_FLOW_PRESET_FAST
     else:
         cv_preset = cv2.DISOPTICAL_FLOW_PRESET_MEDIUM
@@ -253,8 +252,8 @@ def compute_optical_flow(prev_img, curr_img, method, config):
     prev_gray = to_gray(prev_img)
     curr_gray = to_gray(curr_img)
 
-    if method == "dis":
-        flow = compute_dis(prev_gray, curr_gray, config.DIS_PRESET)
+    if method in ["dis_ultrafast", "dis_fast", "dis_medium"]:
+        flow = compute_dis(prev_gray, curr_gray, method)
         return dense_result(method, flow)
 
     if method == "farneback":
