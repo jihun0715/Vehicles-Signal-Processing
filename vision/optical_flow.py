@@ -321,11 +321,17 @@ def visualize_sparse_flow(image, points_prev, points_curr):
 
 def visualize_flow(image, result, config=None):
     if result["flow"] is not None:
-        vis = visualize_dense_flow(result["flow"])
+        flow = result["flow"]
+        dense_vis = visualize_dense_flow(flow)
+        base = _as_bgr_image(image)
+
+        if base.shape[:2] != dense_vis.shape[:2]:
+            height, width = dense_vis.shape[:2]
+            base = cv2.resize(base, (width, height), interpolation=cv2.INTER_AREA)
+
+        vis = cv2.addWeighted(base, 0.45, dense_vis, 0.55, 0)
         scale = getattr(config, "FLOW_VIS_SCALE", 1.0) if config is not None else 1.0
-        if scale != 1.0:
-            return draw_flow_vectors(vis, result["flow"], scale=scale)
-        return vis
+        return draw_flow_vectors(vis, flow, scale=scale)
 
     return visualize_sparse_flow(
         image,

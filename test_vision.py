@@ -59,7 +59,7 @@ def main():
             config=config,
         )
 
-        vis = visualize_flow(curr_img, result)
+        vis = visualize_flow(curr_img, result, config=config)
 
         if config.SHOW_FLOW_STEP:
             try:
