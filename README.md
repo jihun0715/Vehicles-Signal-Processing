@@ -124,16 +124,29 @@ RUN /bin/bash -c "pip install --no-cache-dir -r /home/requirements.txt"
 #OpenCV GUI 실행을 위한 X11/Qt dependency 설치
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
-    libxkbcommon-x11-0 \
-    libxcb-xinerama0 \
-    libxcb-cursor0 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libfontconfig1 \
+    libdbus-1-3 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxcb-glx0 \
     libxcb-icccm4 \
     libxcb-image0 \
     libxcb-keysyms1 \
+    libxcb-shm0 \
+    libxcb-sync1 \
     libxcb-randr0 \
     libxcb-render-util0 \
     libxcb-shape0 \
     libxcb-xfixes0 \
+    libxcb-xinerama0 \
+    libxcb-xkb1 \
+    libxcb-cursor0 \
+    libxkbcommon0 \
+    libxkbcommon-x11-0 \
     && \
     wget -O opencv.zip https://github.com/opencv/opencv/archive/4.x.zip && \
     unzip opencv.zip
