@@ -49,7 +49,7 @@ if __name__ == "__main__":
     y_imu = np.sin(0.7 * t_imu) + 0.3 * np.sin(2.1 * t_imu) + np.random.normal(0, 0.1, len(t_imu))
     
     t_cam = np.arange(0, 10, dt_cam)
-    f_cam = np.sin(0.7 * (t_cam + true_offset)) + 0.3 * np.sin(2.1 * (t_cam + true_offset))
+    f_cam = np.sin(0.7 * (t_cam - true_offset)) + 0.3 * np.sin(2.1 * (t_cam - true_offset))
 
     # --- 파이프라인 가동 ---
     # Step 1: IMU를 카메라 주기에 맞춰 리샘플링
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     # (3) 보정 후 정렬된 신호
     axes[2].plot(t_cam, f_cam, label='Camera (Reference)', linewidth=2)
-    axes[2].plot(t_cam - tau_hat, y_imu_resampled, label=f'IMU Aligned (Est={tau_hat:.2f}s)', 
+    axes[2].plot(t_cam + tau_hat, y_imu_resampled, label=f'IMU Aligned (Est={tau_hat:.2f}s)', 
                  color='green', linestyle='--', alpha=0.8)
     axes[2].set_title("Step 3: Corrected and Aligned Signals", fontweight='bold')
     axes[2].set_xlabel("Time (seconds)")
